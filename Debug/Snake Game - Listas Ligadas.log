@@ -1,9 +1,9 @@
-﻿Build started 3/2/2015 8:09:11 PM.
+﻿Build started 3/2/2015 8:32:47 PM.
      1>Project "C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Snake Game - Listas Ligadas.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt Main.c
          Main.c
-     1>c:\users\nlopes\documents\ipca\edjd\code\paradigmas de programação ii\snake game - listas ligadas\pp2-snake\main.c(89): warning C4098: 'desenharElementos' : 'void' function returning a value
+     1>c:\users\nlopes\documents\ipca\edjd\code\paradigmas de programação ii\snake game - listas ligadas\pp2-snake\main.c(105): warning C4098: 'desenharElementos' : 'void' function returning a value
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Debug\Snake Game - Listas Ligadas.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Debug\Snake Game - Listas Ligadas.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Debug\Snake Game - Listas Ligadas.lib" /MACHINE:X86 Debug\Main.obj
          Snake Game - Listas Ligadas.vcxproj -> C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Debug\Snake Game - Listas Ligadas.exe
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.62
+Time Elapsed 00:00:00.69

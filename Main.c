@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <windows.h>
+#include <conio.h>
 
 COORD 
 	//coordenadas em que são criados elementos da cobra
@@ -9,6 +10,10 @@ COORD
 
 #define linhas 20
 #define colunas 50
+
+//Variáveis globais
+int contadorMovimento = 0;
+int direccaoMovimento = 6;
 
 typedef struct registo{
 	int linha;
@@ -50,36 +55,47 @@ elemento insereElemento(elemento seguinte, int linha, int coluna, int tipoElemen
 elemento mover(elemento apt, int direcao)
 {
 	elemento aux = apt, ant = apt, actual = apt;
-	if (direcao == 2)
+	switch (direcao)
 	{
-
 		//Criar uma nova cabeça para a cobra
+	case 2:
+		apt = insereElemento(apt, coordElemento.X + 1, coordElemento.Y, 0);
+		break;
+	case 6:
 		apt = insereElemento(apt, coordElemento.X, coordElemento.Y + 1, 0);
-
-		//Guardar a lista numa variável temp que podemos alterar
-		actual = apt;
-
-		//Remover a cauda da cobra
-		while (actual != NULL){
-			//Enquanto não chegarmos ao fim da lista..
-			if (actual->seguinte != NULL){
-				//Tem seguinte, guardar este elemento no anterior e passar para o proximo
-				ant = actual;
-				actual = actual->seguinte;
-			}
-			else{
-				//Não tem seguinte, é a cauda!
-				//Retirar o seguinte do penultimo elemento
-				ant->seguinte = NULL;
-				//Apagar o ultimo, o penultimo passa a ser o ultimo
-				free(actual);
-				//devolver a lista
-				return apt;
-			}
-		}
-
-
+		break;
+	case 8:
+		apt = insereElemento(apt, coordElemento.X - 1, coordElemento.Y, 0);
+		break;
+	case 4:
+		apt = insereElemento(apt, coordElemento.X, coordElemento.Y - 1, 0);
+		break;
+	default:
+		break;
 	}
+
+	//Guardar a lista numa variável temp que podemos alterar
+	actual = apt;
+
+	//Remover a cauda da cobra
+	while (actual != NULL){
+		//Enquanto não chegarmos ao fim da lista..
+		if (actual->seguinte != NULL){
+			//Tem seguinte, guardar este elemento no anterior e passar para o proximo
+			ant = actual;
+			actual = actual->seguinte;
+		}
+		else{
+			//Não tem seguinte, é a cauda!
+			//Retirar o seguinte do penultimo elemento
+			ant->seguinte = NULL;
+			//Apagar o ultimo, o penultimo passa a ser o ultimo
+			free(actual);
+			//devolver a lista
+			return apt;
+		}
+	}
+
 	return(apt);
 }
 
@@ -106,9 +122,9 @@ void desenharElementos(elemento elemento, int tipo){
 //Gera uma cobra inicial
 elemento loadCobra(){
 	elemento snake = NULL;
-	snake = insereElemento(snake, 0, 0, 0);
-	snake = insereElemento(snake, 0, 1, 0);
-	snake = insereElemento(snake, 0, 2, 0);
+	snake = insereElemento(snake, 10, 12, 0);
+	snake = insereElemento(snake, 10, 11, 0);
+	snake = insereElemento(snake, 10, 10, 0);
 	return snake;
 }
 
@@ -123,6 +139,32 @@ elemento loadComida(){
 	return comida;
 }
 
+//Lida com input do teclado
+void atualizarInput(){
+	if (_kbhit())
+	{
+		int key = _getch();
+
+		switch (key)
+		{
+		case '2':
+			direccaoMovimento = 2;
+			break;
+		case '6':
+			direccaoMovimento = 6;
+			break;
+		case '8':
+			direccaoMovimento = 8;
+			break;
+		case '4':
+			direccaoMovimento = 4;
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 int main(){
 
 	//Criar uma cobra com 3 elementos iniciais
@@ -130,7 +172,7 @@ int main(){
 
 	//Criar elementos de comida espalhados pelo tabuleiro
 	elemento comida = loadComida();
-	
+
 	while (1){
 		//limpar o ecrã
 		system("cls");
@@ -141,8 +183,16 @@ int main(){
 		//desenhar comida
 		desenharElementos(comida, 1);
 		//mover cobra
-		snake = mover(snake, 2);
+		if (contadorMovimento > 5){
+			snake = mover(snake, direccaoMovimento);
+			contadorMovimento = 0;
+		}
+		//atualizar contador de movimento
+		contadorMovimento++;
+		//Atualizar input do teclado
+		atualizarInput();
 	}
 
 	return 1;
+
 }
