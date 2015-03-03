@@ -11,15 +11,16 @@ COORD
 #define linhas 20
 #define colunas 50
 
-//Variáveis globais
-int contadorMovimento = 0;
-int direccaoMovimento = 6;
-
 typedef struct registo{
 	int linha;
 	int coluna;
 	struct registo *seguinte;
 }* elemento;
+
+//Variáveis globais
+int contadorMovimento = 0;
+int direccaoMovimento = 2;
+elemento snake, comida;
 
 //Desenha os limites do espaço de jogo
 void desenharLimites(){
@@ -119,6 +120,18 @@ void desenharElementos(elemento elemento, int tipo){
 	}
 }
 
+//Desenha o numero de pontos que o jogador tem
+void desenharPontuacao(){
+	coordJanela.X = colunas + 12;
+	coordJanela.Y = 0;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
+	printf("PONTOS");
+	coordJanela.X += 2;
+	coordJanela.Y = 1;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
+	printf("0");
+}
+
 //Gera uma cobra inicial
 elemento loadCobra(){
 	elemento snake = NULL;
@@ -165,34 +178,45 @@ void atualizarInput(){
 	}
 }
 
+void Update(){
+	//mover cobra
+	if (contadorMovimento > 5){
+		snake = mover(snake, direccaoMovimento);
+		contadorMovimento = 0;
+	}
+	//atualizar contador de movimento
+	contadorMovimento++;
+	//Atualizar input do teclado
+	atualizarInput();
+}
+
+void Draw(){
+	//limpar o ecrã
+	system("cls");
+	//desenhar limites do espaço de jogo
+	desenharLimites();
+	//desenhar cobra
+	desenharElementos(snake, 0);
+	//desenhar comida
+	desenharElementos(comida, 1);
+	//Desenhar pontuacao
+	desenharPontuacao();
+}
+
+
+
 int main(){
 
 	//Criar uma cobra com 3 elementos iniciais
-	elemento snake = loadCobra();
+	snake = loadCobra();
 
 	//Criar elementos de comida espalhados pelo tabuleiro
-	elemento comida = loadComida();
+	comida = loadComida();
 
 	while (1){
-		//limpar o ecrã
-		system("cls");
-		//desenhar limites do espaço de jogo
-		desenharLimites();
-		//desenhar cobra
-		desenharElementos(snake, 0);
-		//desenhar comida
-		desenharElementos(comida, 1);
-		//mover cobra
-		if (contadorMovimento > 5){
-			snake = mover(snake, direccaoMovimento);
-			contadorMovimento = 0;
-		}
-		//atualizar contador de movimento
-		contadorMovimento++;
-		//Atualizar input do teclado
-		atualizarInput();
+		Update();
+		Draw();
 	}
 
 	return 1;
-
 }
