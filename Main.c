@@ -23,6 +23,7 @@ typedef struct registo{
 //Variáveis globais
 int contadorMovimento = 0;
 int direccaoMovimento = 2;
+int direccaoMovimentoAnterior = 2;
 elemento snake, comida;
 int pontos = 0;
 int aComer = 0;
@@ -276,17 +277,42 @@ void atualizarInput(){
 		switch (key)
 		{
 		case '2':
-			direccaoMovimento = 2;
+			// bloqueia o movimento contrario à ordem dada!
+			if (direccaoMovimentoAnterior != 8)
+			{
+				direccaoMovimento = 2;
+				direccaoMovimentoAnterior = direccaoMovimento;
+			}
 			break;
+
 		case '6':
-			direccaoMovimento = 6;
+			// bloqueia o movimento contrario à ordem dada!
+			if (direccaoMovimentoAnterior != 4)
+			{
+				direccaoMovimento = 6;
+				direccaoMovimentoAnterior = direccaoMovimento;
+			}
 			break;
+
 		case '8':
-			direccaoMovimento = 8;
+			// bloqueia o movimento contrario à ordem dada!
+
+			if (direccaoMovimentoAnterior != 2)
+			{
+				direccaoMovimento = 8;
+				direccaoMovimentoAnterior = direccaoMovimento;
+			}
 			break;
+
 		case '4':
-			direccaoMovimento = 4;
+			// bloqueia o movimento contrario à ordem dada!
+			if (direccaoMovimentoAnterior != 6)
+			{
+				direccaoMovimento = 4;
+				direccaoMovimentoAnterior = direccaoMovimento;
+			}
 			break;
+
 		default:
 			break;
 		}
