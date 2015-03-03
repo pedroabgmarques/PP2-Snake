@@ -192,7 +192,7 @@ void verificarSeCome(){
 				//Acrescentamos um elemento à lista da cobra
 				snake = insereElemento(snake, papa->linha, papa->coluna, 0);
 				//Aumentamos os pontos do jogador
-				pontos += 10;
+				pontos += 6;
 				//Removemos esta comida da lista de comidas
 				comida = removerRecursivo(comida, papa->linha, papa->coluna);
 				//Inserimos uma nova comida num local aleatorio
@@ -213,20 +213,15 @@ bool verificarColisao()
 	{
 		return false;
 	}
-
 	else 
-	
+	{
 		// verifica se a cabeça da cobra encontrasse no limite do tabuleiro
-		if (snake->linha  == 0 || snake->linha == linhas || snake->coluna == 0 || snake->coluna == colunas)
+		if (snake->linha == 1 || snake->linha == linhas-1 || snake->coluna == 1 || snake->coluna == colunas-1)
 		{
-			
 			return true;
-
-		}return false;
-		
-		
-	
-
+		}
+		return false;
+	}
 }
 
 //Desenha o numero de pontos que o jogador tem
@@ -345,7 +340,7 @@ int main(){
 	//Criar elementos de comida espalhados pelo tabuleiro
 	loadComida();
 
-	while (verificarColisao){
+	while (!verificarColisao()){
 		Update();
 		Draw();
 	}
