@@ -120,7 +120,7 @@ void desenharElementos(elemento elemento, int tipo){
 			printf("+");
 		}
 		else{
-			printf(".");
+			printf("O");
 		}
 		desenharElementos(elemento->seguinte, tipo);
 	}
@@ -134,7 +134,7 @@ void desenharBocaCobra(elemento elemento){
 		coordJanela.X = elemento->coluna + 1;
 		coordJanela.Y = elemento->linha + 1;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-		printf("0");
+		printf("*");
 	}
 }
 
@@ -163,7 +163,7 @@ elemento removerRecursivo(elemento enderecoInicioLista, int linha, int coluna){
 }
 
 void criarComida(){
-	comida = insereElemento(comida, 1 + rand() % (linhas - 1), 1 + rand() % (colunas - 1), 1);
+	comida = insereElemento(comida, (1+rand() % (linhas-2)), (1+rand() % (colunas-2)), 1);
 }
 
 //Contagem de elementos recursiva
@@ -197,7 +197,7 @@ void verificarSeCome(){
 				//Removemos esta comida da lista de comidas
 				comida = removerRecursivo(comida, papa->linha, papa->coluna);
 				//Inserimos uma nova comida num local aleatorio
-				if (quantidade(comida) < 2){
+				if (quantidade(comida) < 5){
 					criarComida();
 				}
 				break;
@@ -217,7 +217,7 @@ bool verificarColisao()
 	else 
 	{
 		// verifica se a cabeça da cobra encontrasse no limite do tabuleiro
-		if (snake->linha == 1 || snake->linha == linhas-1 || snake->coluna == 1 || snake->coluna == colunas-1)
+		if (snake->linha == -1 || snake->linha == linhas - 1 || snake->coluna == -1 || snake->coluna == colunas - 1)
 		{
 			return true;
 		}
@@ -236,15 +236,15 @@ void desenharPontuacao(){
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 	printf("%d", pontos);
 }
-// desenhar fim do jogo
+
+//desenhar fim do jogo
 //mensegem de fim do joo
 //pontuacao maxima
-
 void desenharFimDoJogo(){
 	coordJanela.X = colunas -25;
 	coordJanela.Y = 10;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-	printf("FIM DO JOGO ANIMAL :)");
+	printf("GAME OVER!");
 	coordJanela.X;;
 	coordJanela.Y += 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
@@ -281,7 +281,6 @@ void atualizarInput(){
 			if (direccaoMovimentoAnterior != 8)
 			{
 				direccaoMovimento = 2;
-				direccaoMovimentoAnterior = direccaoMovimento;
 			}
 			break;
 
@@ -290,7 +289,6 @@ void atualizarInput(){
 			if (direccaoMovimentoAnterior != 4)
 			{
 				direccaoMovimento = 6;
-				direccaoMovimentoAnterior = direccaoMovimento;
 			}
 			break;
 
@@ -300,7 +298,6 @@ void atualizarInput(){
 			if (direccaoMovimentoAnterior != 2)
 			{
 				direccaoMovimento = 8;
-				direccaoMovimentoAnterior = direccaoMovimento;
 			}
 			break;
 
@@ -309,7 +306,6 @@ void atualizarInput(){
 			if (direccaoMovimentoAnterior != 6)
 			{
 				direccaoMovimento = 4;
-				direccaoMovimentoAnterior = direccaoMovimento;
 			}
 			break;
 
@@ -324,6 +320,7 @@ void moverCobra(int velocidade){
 		snake = mover(snake, direccaoMovimento);
 		contadorMovimento = 0;
 		if (aComer == 1) aComer = 0;
+		direccaoMovimentoAnterior = direccaoMovimento;
 	}
 	//atualizar contador de movimento
 	contadorMovimento++;
@@ -331,7 +328,7 @@ void moverCobra(int velocidade){
 
 void Update(){
 	//mover cobra
-	moverCobra(10);
+	moverCobra(5);
 	//Atualizar input do teclado
 	atualizarInput();
 	//Verificar se está a comer
