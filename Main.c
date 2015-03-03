@@ -21,6 +21,7 @@ typedef struct registo{
 int contadorMovimento = 0;
 int direccaoMovimento = 2;
 elemento snake, comida;
+int pontos = 0;
 
 //Desenha os limites do espaço de jogo
 void desenharLimites(){
@@ -120,6 +121,54 @@ void desenharElementos(elemento elemento, int tipo){
 	}
 }
 
+//Remover elemento da lista ligada - recursivamente
+elemento removerRecursivo(elemento enderecoInicioLista, int linha, int coluna){
+	elemento aux;
+	if (enderecoInicioLista != NULL){
+		//Lista não está vazia
+		if (enderecoInicioLista->linha == linha
+			&& enderecoInicioLista->coluna == coluna){
+			//encontramos o elemento a eliminar
+			aux = enderecoInicioLista->seguinte;
+			free(enderecoInicioLista);
+			return aux;
+		}
+		else{
+			//não é este o elemento e eliminar, continuar a recursão
+			enderecoInicioLista->seguinte = removerRecursivo(enderecoInicioLista->seguinte, linha, coluna);
+			return enderecoInicioLista;
+		}
+	}
+	else{
+		//Lista vazia
+		return enderecoInicioLista;
+	}
+}
+
+void verificarSeCome(){
+	elemento cobra = snake, papa = comida;
+	if (cobra == NULL){
+		return 0;
+	}
+	else{
+		//O primeiro elemento é a cabeça, vamos ver se está sobreposta a uma comida
+		while (papa != NULL){
+			if (cobra->coluna == papa->coluna
+				&& cobra->linha == papa->linha){
+				//Temos aqui uma comida!
+				//Acrescentamos um elemento à lista da cobra
+				snake = insereElemento(snake, papa->linha, papa->coluna, 0);
+				//Aumentamos os pontos do jogador
+				pontos += 10;
+				//Removemos esta comida da lista de comidas
+				comida = removerRecursivo(comida, papa->linha, papa->coluna);
+				break;
+			}
+			papa = papa->seguinte;
+		}
+	}
+}
+
 //Desenha o numero de pontos que o jogador tem
 void desenharPontuacao(){
 	coordJanela.X = colunas + 12;
@@ -129,7 +178,7 @@ void desenharPontuacao(){
 	coordJanela.X += 2;
 	coordJanela.Y = 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-	printf("0");
+	printf("%d", pontos);
 }
 
 //Gera uma cobra inicial
@@ -178,16 +227,22 @@ void atualizarInput(){
 	}
 }
 
-void Update(){
-	//mover cobra
-	if (contadorMovimento > 5){
+void moverCobra(int velocidade){
+	if (contadorMovimento > velocidade){
 		snake = mover(snake, direccaoMovimento);
 		contadorMovimento = 0;
 	}
 	//atualizar contador de movimento
 	contadorMovimento++;
+}
+
+void Update(){
+	//mover cobra
+	moverCobra(2);
 	//Atualizar input do teclado
 	atualizarInput();
+	//Verificar se está a comer
+	verificarSeCome();
 }
 
 void Draw(){
