@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <windows.h>
 #include <conio.h>
+#include <time.h>
+#include <stdlib.h>
 
 COORD 
 	//coordenadas em que são criados elementos da cobra
@@ -145,6 +147,10 @@ elemento removerRecursivo(elemento enderecoInicioLista, int linha, int coluna){
 	}
 }
 
+void criarComida(){
+	comida = insereElemento(comida, 1 + rand() % linhas - 1, 1 + rand() % colunas - 1, 1);
+}
+
 void verificarSeCome(){
 	elemento cobra = snake, papa = comida;
 	if (cobra == NULL){
@@ -162,6 +168,8 @@ void verificarSeCome(){
 				pontos += 10;
 				//Removemos esta comida da lista de comidas
 				comida = removerRecursivo(comida, papa->linha, papa->coluna);
+				//Inserimos uma nova comida num local aleatorio
+				criarComida();
 				break;
 			}
 			papa = papa->seguinte;
@@ -191,14 +199,11 @@ elemento loadCobra(){
 }
 
 //Gera os elementos de comida iniciais
-elemento loadComida(){
+void loadComida(){
 	elemento comida = NULL;
-	comida = insereElemento(comida, 10, 5, 1);
-	comida = insereElemento(comida, 12, 1, 1);
-	comida = insereElemento(comida, 17, 8, 1);
-	comida = insereElemento(comida, 2, 10, 1);
-	comida = insereElemento(comida, 6, 14, 1);
-	return comida;
+	for (int i = 0; i < 7; i++){
+		criarComida();
+	}
 }
 
 //Lida com input do teclado
@@ -262,11 +267,13 @@ void Draw(){
 
 int main(){
 
+	srand(time(NULL));
+
 	//Criar uma cobra com 3 elementos iniciais
 	snake = loadCobra();
 
 	//Criar elementos de comida espalhados pelo tabuleiro
-	comida = loadComida();
+	loadComida();
 
 	while (1){
 		Update();
