@@ -3,6 +3,7 @@
 #include <conio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 COORD 
 	//coordenadas em que são criados elementos da cobra
@@ -115,10 +116,10 @@ void desenharElementos(elemento elemento, int tipo){
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 
 		if (tipo == 0){
-			printf("O");
+			printf("+");
 		}
 		else{
-			printf("X");
+			printf(".");
 		}
 		desenharElementos(elemento->seguinte, tipo);
 	}
@@ -204,6 +205,29 @@ void verificarSeCome(){
 		}
 	}
 }
+// verificar se a cabeça colide com os limites do tabuleiro ou com o proprio corpo
+bool verificarColisao()
+{
+
+	if (snake == NULL)
+	{
+		return false;
+	}
+
+	else 
+	
+		// verifica se a cabeça da cobra encontrasse no limite do tabuleiro
+		if (snake->linha  == 0 || snake->linha == linhas || snake->coluna == 0 || snake->coluna == colunas)
+		{
+			
+			return true;
+
+		}return false;
+		
+		
+	
+
+}
 
 //Desenha o numero de pontos que o jogador tem
 void desenharPontuacao(){
@@ -215,6 +239,20 @@ void desenharPontuacao(){
 	coordJanela.Y = 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 	printf("%d", pontos);
+}
+// desenhar fim do jogo
+//mensegem de fim do joo
+//pontuacao maxima
+
+void desenharFimDoJogo(){
+	coordJanela.X = colunas -25;
+	coordJanela.Y = 10;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
+	printf("FIM DO JOGO ANIMAL :)");
+	coordJanela.X;;
+	coordJanela.Y += 1;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
+	printf("Pontuacao Maxima : %d\n", pontos);
 }
 
 //Gera uma cobra inicial
@@ -272,11 +310,12 @@ void moverCobra(int velocidade){
 
 void Update(){
 	//mover cobra
-	moverCobra(1);
+	moverCobra(10);
 	//Atualizar input do teclado
 	atualizarInput();
 	//Verificar se está a comer
 	verificarSeCome();
+	
 }
 
 void Draw(){
@@ -306,10 +345,11 @@ int main(){
 	//Criar elementos de comida espalhados pelo tabuleiro
 	loadComida();
 
-	while (1){
+	while (verificarColisao){
 		Update();
 		Draw();
 	}
+	desenharFimDoJogo();
 
 	return 1;
 }
