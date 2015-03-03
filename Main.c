@@ -24,6 +24,7 @@ int contadorMovimento = 0;
 int direccaoMovimento = 2;
 elemento snake, comida;
 int pontos = 0;
+int aComer = 0;
 
 //Desenha os limites do espaço de jogo
 void desenharLimites(){
@@ -123,6 +124,18 @@ void desenharElementos(elemento elemento, int tipo){
 	}
 }
 
+void desenharBocaCobra(elemento elemento){
+	if (elemento == NULL){
+		return 0;
+	}
+	else{
+		coordJanela.X = elemento->coluna + 1;
+		coordJanela.Y = elemento->linha + 1;
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
+		printf("0");
+	}
+}
+
 //Remover elemento da lista ligada - recursivamente
 elemento removerRecursivo(elemento enderecoInicioLista, int linha, int coluna){
 	elemento aux;
@@ -148,7 +161,18 @@ elemento removerRecursivo(elemento enderecoInicioLista, int linha, int coluna){
 }
 
 void criarComida(){
-	comida = insereElemento(comida, 1 + rand() % linhas - 1, 1 + rand() % colunas - 1, 1);
+	comida = insereElemento(comida, 1 + rand() % (linhas - 1), 1 + rand() % (colunas - 1), 1);
+}
+
+//Contagem de elementos recursiva
+int quantidade(elemento endereco){
+	if (endereco == NULL){
+		return 0;
+	}
+	else{
+		//A função invoca-se a ela própria
+		return (1 + quantidade(endereco->seguinte));
+	}
 }
 
 void verificarSeCome(){
@@ -162,6 +186,8 @@ void verificarSeCome(){
 			if (cobra->coluna == papa->coluna
 				&& cobra->linha == papa->linha){
 				//Temos aqui uma comida!
+				//Alteramos a flag
+				aComer = 1;
 				//Acrescentamos um elemento à lista da cobra
 				snake = insereElemento(snake, papa->linha, papa->coluna, 0);
 				//Aumentamos os pontos do jogador
@@ -169,7 +195,9 @@ void verificarSeCome(){
 				//Removemos esta comida da lista de comidas
 				comida = removerRecursivo(comida, papa->linha, papa->coluna);
 				//Inserimos uma nova comida num local aleatorio
-				criarComida();
+				if (quantidade(comida) < 2){
+					criarComida();
+				}
 				break;
 			}
 			papa = papa->seguinte;
@@ -201,7 +229,7 @@ elemento loadCobra(){
 //Gera os elementos de comida iniciais
 void loadComida(){
 	elemento comida = NULL;
-	for (int i = 0; i < 7; i++){
+	for (int i = 0; i < 6; i++){
 		criarComida();
 	}
 }
@@ -236,6 +264,7 @@ void moverCobra(int velocidade){
 	if (contadorMovimento > velocidade){
 		snake = mover(snake, direccaoMovimento);
 		contadorMovimento = 0;
+		if (aComer == 1) aComer = 0;
 	}
 	//atualizar contador de movimento
 	contadorMovimento++;
@@ -243,7 +272,7 @@ void moverCobra(int velocidade){
 
 void Update(){
 	//mover cobra
-	moverCobra(2);
+	moverCobra(1);
 	//Atualizar input do teclado
 	atualizarInput();
 	//Verificar se está a comer
@@ -255,15 +284,17 @@ void Draw(){
 	system("cls");
 	//desenhar limites do espaço de jogo
 	desenharLimites();
-	//desenhar cobra
-	desenharElementos(snake, 0);
 	//desenhar comida
 	desenharElementos(comida, 1);
+	//desenhar cobra
+	desenharElementos(snake, 0);
+	//Se estiver a comer, desenhar boca
+	if (aComer == 1){
+		desenharBocaCobra(snake);
+	}
 	//Desenhar pontuacao
 	desenharPontuacao();
 }
-
-
 
 int main(){
 
