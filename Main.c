@@ -28,6 +28,7 @@ int direccaoMovimentoAnterior = 2;
 elemento snake, comida;
 int pontos = 0;
 int aComer = 0;
+bool endgame = false;
 
 //Desenha os limites do espaço de jogo
 void desenharLimites(){
@@ -250,6 +251,8 @@ void desenharFimDoJogo(){
 	coordJanela.Y += 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 	printf("Pontuacao Maxima : %d\n", pontos);
+	endgame = true;
+	
 }
 
 //Gera uma cobra inicial
@@ -336,7 +339,37 @@ void Update(){
 	verificarSeCome();
 	
 }
+// metodo para reiniciar o jogo
+void newGame()
+{
 
+	
+	
+		printf("Play again?\n");
+		printf("Y for yes or N for not \n");
+		if (_kbhit())
+		{
+			int key = _getch();
+			switch (key)
+			{
+			case 'y':
+			{
+				endgame=false;
+				break;
+			}
+				
+			case 'n':
+			{
+				endgame=true;
+				break;
+			}
+				
+			default:
+				break;
+			}
+		}
+		system("cls");
+}
 void Draw(){
 	//limpar o ecrã
 	system("cls");
@@ -355,7 +388,7 @@ void Draw(){
 }
 
 int main(){
-
+	
 	srand(time(NULL));
 
 	//Criar uma cobra com 3 elementos iniciais
@@ -363,12 +396,27 @@ int main(){
 
 	//Criar elementos de comida espalhados pelo tabuleiro
 	loadComida();
-
-	while (!verificarColisao()){
-		Update();
-		Draw();
-	}
-	desenharFimDoJogo();
-
-	return 1;
+	
+	 while (true)
+	 {
+		 if(endgame == false)
+		 {
+			 if (!verificarColisao())
+			 {
+				 Update();
+				 Draw();
+			 }
+			 else
+			 {
+				 desenharFimDoJogo();
+			 }
+		 }
+		 else
+		 {
+			 newGame();
+		 }
+	 }
+	
+	
+	 return 1;
 }
