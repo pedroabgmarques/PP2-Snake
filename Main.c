@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 COORD 
+// ahsjgdfha
 	//coordenadas em que são criados elementos da cobra
 	coordElemento, 
 	//coordenadas utilizadas para desenhar os elementos
