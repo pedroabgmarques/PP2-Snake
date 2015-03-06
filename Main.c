@@ -354,6 +354,21 @@ void Update(){
 	verificarSeCome();
 	
 }
+// recomeçar o jogo
+// variaveis são iniciadas
+void Restart()
+{
+
+	snake = NULL;
+	comida = NULL;
+
+
+	snake = loadCobra();
+	loadComida();
+	endgame = false;
+
+}
+
 // metodo para reiniciar o jogo
 void newGame()
 {
@@ -366,14 +381,14 @@ void newGame()
 			{
 			case 'y':
 			{
-				endgame=false;
+				Restart();
 				break;
 			}
 				
 			case 'n':
 			{
 				sairJogo = true;
-				endgame=true;
+				Restart();
 				break;
 			}
 				
@@ -406,12 +421,15 @@ void Draw(){
 	al_flip_display();
 }
 
+
 //Destroi os objetos criados
 void shutDown(){
 	if (display){
 		al_destroy_display(display);
 	}
 }
+
+
 
 int main(int argc, char **argv){
 
@@ -460,6 +478,7 @@ int main(int argc, char **argv){
 	 {
 		 if(endgame == false)
 		 {
+			 
 			 if (!verificarColisao())
 			 {
 				 Update();
