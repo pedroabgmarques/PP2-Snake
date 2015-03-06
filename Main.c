@@ -71,6 +71,31 @@ elemento insereElemento(elemento seguinte, int linha, int coluna, int tipoElemen
 	return elemento;
 }
 
+//Insere um elemento na cauda lista ligada
+elemento insereElementoCauda(elemento seguinte, int linha, int coluna, int tipoElemento){
+	
+	//Aloca o espaço necessário na memória
+	elemento elemento = malloc(sizeof(struct registo));
+	//Dar os valores ao aluno
+	elemento->linha = linha;
+	elemento->coluna = coluna;
+	if (tipoElemento == 0){
+		//Elementos da cobra
+		coordElemento.X = linha;
+		coordElemento.Y = coluna;
+	}
+	elemento->seguinte = NULL;
+
+	//encontrar a cauda da cobra
+	while (seguinte->seguinte != NULL){
+		seguinte = seguinte->seguinte;
+	}
+	
+	seguinte->seguinte = elemento;
+
+	return seguinte;
+}
+
 elemento mover(elemento apt, int direcao)
 {
 	elemento aux = apt, ant = apt, actual = apt;
@@ -208,7 +233,7 @@ void verificarSeCome(){
 				//Alteramos a flag
 				aComer = 1;
 				//Acrescentamos um elemento à lista da cobra
-				snake = insereElemento(snake, papa->linha, papa->coluna, 0);
+				cobra = insereElementoCauda(snake, papa->linha, papa->coluna, 0);
 				//Aumentamos os pontos do jogador
 				pontos += 6;
 				//Removemos esta comida da lista de comidas
@@ -295,7 +320,7 @@ void atualizarInput(){
 
 		switch (key)
 		{
-		case '2':
+		case 's':
 			// bloqueia o movimento contrario à ordem dada!
 			if (direccaoMovimentoAnterior != 8)
 			{
@@ -303,7 +328,7 @@ void atualizarInput(){
 			}
 			break;
 
-		case '6':
+		case 'd':
 			// bloqueia o movimento contrario à ordem dada!
 			if (direccaoMovimentoAnterior != 4)
 			{
@@ -311,7 +336,7 @@ void atualizarInput(){
 			}
 			break;
 
-		case '8':
+		case 'w':
 			// bloqueia o movimento contrario à ordem dada!
 
 			if (direccaoMovimentoAnterior != 2)
@@ -320,7 +345,7 @@ void atualizarInput(){
 			}
 			break;
 
-		case '4':
+		case 'a':
 			// bloqueia o movimento contrario à ordem dada!
 			if (direccaoMovimentoAnterior != 6)
 			{
