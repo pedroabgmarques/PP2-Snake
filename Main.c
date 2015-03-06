@@ -4,6 +4,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
 
 COORD 
 // ahsjgdfha
@@ -29,6 +31,13 @@ elemento snake, comida;
 int pontos = 0;
 int aComer = 0;
 bool endgame = false;
+bool sairJogo = false;
+
+//Criar um display para o Allegro
+ALLEGRO_DISPLAY *display = NULL;
+
+//Cores
+ALLEGRO_COLOR RED, BLACK, ORANGE;
 
 //Desenha os limites do espaço de jogo
 void desenharLimites(){
@@ -39,6 +48,7 @@ void desenharLimites(){
 				coordJanela.Y = i;
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 				printf("+");
+				al_draw_rectangle(j * 10, i * 10, j * 10 + 10, i * 10 + 10, BLACK, 2);
 			}
 		}
 	}
@@ -120,9 +130,14 @@ void desenharElementos(elemento elemento, int tipo){
 
 		if (tipo == 0){
 			printf("+");
+			//Cor sólida
+			al_draw_filled_rectangle(elemento->coluna * 10, elemento->linha * 10, elemento->coluna * 10 + 10, elemento->linha * 10 + 10, RED);
+			//Borda
+			al_draw_rectangle(elemento->coluna * 10 + 2, elemento->linha * 10 + 2, elemento->coluna * 10 + 8, elemento->linha * 10 + 8, BLACK, 2);
 		}
 		else{
 			printf("O");
+			al_draw_filled_circle(elemento->coluna * 10 + 5, elemento->linha * 10 + 5, 6, ORANGE);
 		}
 		desenharElementos(elemento->seguinte, tipo);
 	}
@@ -342,9 +357,6 @@ void Update(){
 // metodo para reiniciar o jogo
 void newGame()
 {
-
-	
-	
 		printf("Play again?\n");
 		printf("Y for yes or N for not \n");
 		if (_kbhit())
@@ -360,6 +372,7 @@ void newGame()
 				
 			case 'n':
 			{
+				sairJogo = true;
 				endgame=true;
 				break;
 			}
@@ -373,6 +386,9 @@ void newGame()
 void Draw(){
 	//limpar o ecrã
 	system("cls");
+	//Limpar o backbuffer para a cor de fundo
+	al_clear_to_color(al_map_rgb(63, 20, 42));
+
 	//desenhar limites do espaço de jogo
 	desenharLimites();
 	//desenhar comida
@@ -385,10 +401,53 @@ void Draw(){
 	}
 	//Desenhar pontuacao
 	desenharPontuacao();
+
+	//Desenhar o backbuffer no ecrã
+	al_flip_display();
 }
 
-int main(){
-	
+//Destroi os objetos criados
+void shutDown(){
+	if (display){
+		al_destroy_display(display);
+	}
+}
+
+int main(int argc, char **argv){
+
+	//Inicializar o allegro
+	if (!al_init()) {
+		fprintf(stderr, "failed to initialize allegro!\n");
+		return -1;
+	}
+	//Inicializar o display
+	display = al_create_display(640, 480);
+	if (!display) {
+		fprintf(stderr, "failed to create display!\n");
+		return -1;
+	}
+	//Inicializar o addon de primitivas
+	if (!al_init_primitives_addon()) {
+		fprintf(stderr, "failed to initialize primitives addon!\n");
+		return -1;
+	}
+
+	//Inicializar cores
+	RED = al_map_rgb(255, 0, 0);
+	BLACK = al_map_rgb(0, 0, 0);
+	ORANGE = al_map_rgb(255, 165, 0);
+
+	//Desenhar algumas primitivas
+	////LINHA
+	//ALLEGRO_COLOR color_blue = al_map_rgb(0, 0, 255);
+	//al_draw_line(0.0, 640.0, 480.0, 0.0, color_blue, 1.0);
+	////RECTANGULO
+	//ALLEGRO_COLOR color_orange = al_map_rgb(255, 210, 0);
+	//al_draw_rectangle(3.0, 4.0, 170.0, 160.0, color_orange, 1.0);
+	////FILLED RECTANGULO
+	//ALLEGRO_COLOR red_color = al_map_rgb(184, 22, 22);
+	//al_draw_filled_rectangle(50.0, 40.0, 250.0, 230.0, red_color);
+
 	srand(time(NULL));
 
 	//Criar uma cobra com 3 elementos iniciais
@@ -397,7 +456,7 @@ int main(){
 	//Criar elementos de comida espalhados pelo tabuleiro
 	loadComida();
 	
-	 while (true)
+	while (!sairJogo)
 	 {
 		 if(endgame == false)
 		 {
@@ -418,5 +477,6 @@ int main(){
 	 }
 	
 	
+	 shutDown();
 	 return 1;
 }
