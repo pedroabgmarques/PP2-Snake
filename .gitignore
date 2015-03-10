@@ -29,3 +29,8 @@
 *.hex
 *.opensdf
 *.log
+*.tlog
+*.pdb
+*.log
+*.sdf
+*.suo

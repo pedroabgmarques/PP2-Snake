@@ -1,5 +1,20 @@
-﻿Build started 3/10/2015 3:05:10 AM.
+﻿Build started 3/10/2015 3:06:26 AM.
+     1>Project "C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Snake Game - Listas Ligadas.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Ic:\allegro\include /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TC /analyze- /errorReport:prompt Main.c
+         Main.c
+     1>Main.c(149): warning C4098: 'desenharElementos' : 'void' function returning a value
+     1>Main.c(173): warning C4098: 'desenharBocaCobra' : 'void' function returning a value
+     1>Main.c(226): warning C4098: 'verificarSeCome' : 'void' function returning a value
+     1>Main.c(295): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\stdio.h(356) : see declaration of 'sprintf'
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Release\Snake Game - Listas Ligadas.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:c:\allegro\lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib "allegro-5.0.10-monolith-md.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Release\Snake Game - Listas Ligadas.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Release\Snake Game - Listas Ligadas.lib" /MACHINE:X86 /SAFESEH Release\Main.obj
+         Generating code
+         Finished generating code
+         Snake Game - Listas Ligadas.vcxproj -> C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Release\Snake Game - Listas Ligadas.exe
+     1>Done Building Project "C:\Users\nlopes\Documents\IPCA\EDJD\code\Paradigmas de Programação II\Snake Game - Listas Ligadas\PP2-Snake\Snake Game - Listas Ligadas.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.02
+Time Elapsed 00:00:00.83
