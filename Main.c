@@ -76,28 +76,24 @@ elemento insereElemento(elemento seguinte, int linha, int coluna, int tipoElemen
 }
 
 //Insere um elemento na cauda lista ligada
-elemento insereElementoCauda(elemento seguinte, int linha, int coluna, int tipoElemento){
+elemento insereElementoCauda(elemento snake, int linha, int coluna, int tipoElemento){
 	
 	//Aloca o espaço necessário na memória
 	elemento elemento = malloc(sizeof(struct registo));
-	//Dar os valores ao aluno
-	elemento->linha = linha;
-	elemento->coluna = coluna;
-	if (tipoElemento == 0){
-		//Elementos da cobra
-		coordElemento.X = linha;
-		coordElemento.Y = coluna;
-	}
+
 	elemento->seguinte = NULL;
 
 	//encontrar a cauda da cobra
-	while (seguinte->seguinte != NULL){
-		seguinte = seguinte->seguinte;
+	while (snake->seguinte != NULL){
+		snake = snake->seguinte;
 	}
 	
-	seguinte->seguinte = elemento;
+	elemento->linha = snake->linha;
+	elemento->coluna = snake->coluna;
 
-	return seguinte;
+	snake->seguinte = elemento;
+
+	return snake;
 }
 
 elemento mover(elemento apt, int direcao)
@@ -267,7 +263,19 @@ bool verificarColisao()
 		if (snake->linha == 0 || snake->linha == linhas || snake->coluna == 0 || snake->coluna == colunas )
 		{
 			return true;
+		}	
+		
+		if (snake->seguinte != NULL){
+			elemento cobra = snake->seguinte;
+			while (cobra != NULL){
+				if (cobra->linha == snake->linha && cobra->coluna == snake->coluna){
+					return true;
+				}
+				cobra = cobra->seguinte;
+			}
 		}
+		
+
 		return false;
 	}
 }
@@ -289,6 +297,15 @@ void desenharPontuacao(){
 	al_draw_text(font, al_map_rgb(255, 255, 255), 525, 10, ALLEGRO_ALIGN_CENTRE, cated_string);
 }
 
+//ALLEGRO HELPER - press any key
+void al_readkey() { 
+	ALLEGRO_EVENT_QUEUE *queue = NULL; 
+	queue = al_create_event_queue(); 
+	al_register_event_source(queue, al_get_keyboard_event_source()); 
+	al_wait_for_event(queue, NULL); 
+	al_destroy_event_queue(queue); 
+}
+
 //desenhar fim do jogo
 //mensegem de fim do joo
 //pontuacao maxima
@@ -304,7 +321,15 @@ void desenharFimDoJogo(){
 
 	//TODO:
 	//ALLEGRO game over e esperar por teclado antes de passar engame para true
+
+	al_draw_text(font, al_map_rgb(255, 255, 255), 640/2, 480/3, ALLEGRO_ALIGN_CENTRE, "Game Over");
+
+	al_flip_display();
+
+	al_readkey();
+
 	endgame = true;
+	
 	
 }
 
@@ -393,6 +418,7 @@ void Restart()
 	pontos = 0;
 	snake = loadCobra();
 	loadComida();
+	direccaoMovimento = 2;
 	endgame = false;
 
 }
@@ -418,6 +444,8 @@ void newGame()
 		Restart();
 	}
 }
+
+//Desenhar o jogo
 void Draw(){
 	//limpar o ecrã
 	//system("cls");
@@ -441,17 +469,22 @@ void Draw(){
 	al_flip_display();
 }
 
-
 //Destroi os objetos criados
 void shutDown(){
 	if (display){
 		al_destroy_display(display);
+	}
+	if (font){
+		al_destroy_font(font);
 	}
 }
 
 
 
 int main(int argc, char **argv){
+
+	//Desligar a consola
+	FreeConsole();
 
 	//Inicializar o allegro
 	if (!al_init()) {
@@ -488,17 +521,6 @@ int main(int argc, char **argv){
 	RED = al_map_rgb(255, 0, 0);
 	BLACK = al_map_rgb(0, 0, 0);
 	ORANGE = al_map_rgb(255, 165, 0);
-
-	//Desenhar algumas primitivas
-	////LINHA
-	//ALLEGRO_COLOR color_blue = al_map_rgb(0, 0, 255);
-	//al_draw_line(0.0, 640.0, 480.0, 0.0, color_blue, 1.0);
-	////RECTANGULO
-	//ALLEGRO_COLOR color_orange = al_map_rgb(255, 210, 0);
-	//al_draw_rectangle(3.0, 4.0, 170.0, 160.0, color_orange, 1.0);
-	////FILLED RECTANGULO
-	//ALLEGRO_COLOR red_color = al_map_rgb(184, 22, 22);
-	//al_draw_filled_rectangle(50.0, 40.0, 250.0, 230.0, red_color);
 
 	srand(time(NULL));
 
