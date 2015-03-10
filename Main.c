@@ -96,6 +96,7 @@ elemento insereElementoCauda(elemento snake, int linha, int coluna, int tipoElem
 	return snake;
 }
 
+//Processo de mover a cobra (criar um elemento e remover um elemento)
 elemento mover(elemento apt, int direcao)
 {
 	elemento aux = apt, ant = apt, actual = apt;
@@ -168,6 +169,7 @@ void desenharElementos(elemento elemento, int tipo){
 	}
 }
 
+//Desenha a boca da cobra quando está a comer
 void desenharBocaCobra(elemento elemento){
 	if (elemento == NULL){
 		return 0;
@@ -205,6 +207,7 @@ elemento removerRecursivo(elemento enderecoInicioLista, int linha, int coluna){
 	}
 }
 
+//Cria uma comida numa posição aleatória
 void criarComida(){
 	comida = insereElemento(comida, (1+rand() % (linhas-2)), (1+rand() % (colunas-2)), 1);
 }
@@ -220,6 +223,7 @@ int quantidade(elemento endereco){
 	}
 }
 
+//Verifica se esta a comer
 void verificarSeCome(){
 	elemento cobra = snake, papa = comida;
 	if (cobra == NULL){
@@ -249,6 +253,7 @@ void verificarSeCome(){
 		}
 	}
 }
+
 // verificar se a cabeça colide com os limites do tabuleiro ou com o proprio corpo
 bool verificarColisao()
 {
@@ -306,9 +311,7 @@ void al_readkey() {
 	al_destroy_event_queue(queue); 
 }
 
-//desenhar fim do jogo
-//mensegem de fim do joo
-//pontuacao maxima
+//game over
 void desenharFimDoJogo(){
 	/*coordJanela.X = colunas -25;
 	coordJanela.Y = 10;
@@ -388,6 +391,7 @@ void atualizarInput(){
 	}
 }
 
+//Atualiza o movimento da cobra
 void moverCobra(int velocidade){
 	if (contadorMovimento > velocidade){
 		snake = mover(snake, direccaoMovimento);
@@ -399,6 +403,7 @@ void moverCobra(int velocidade){
 	contadorMovimento++;
 }
 
+//UPDATE
 void Update(){
 	//mover cobra
 	moverCobra(50);
@@ -408,8 +413,8 @@ void Update(){
 	verificarSeCome();
 	
 }
-// recomeçar o jogo
-// variaveis são iniciadas
+
+//recomeçar o jogo
 void Restart()
 {
 
@@ -423,7 +428,7 @@ void Restart()
 
 }
 
-// metodo para reiniciar o jogo
+// play again?
 void newGame()
 {
 
@@ -480,7 +485,7 @@ void shutDown(){
 }
 
 
-
+//ENTRY POINT
 int main(int argc, char **argv){
 
 	//Desligar a consola
