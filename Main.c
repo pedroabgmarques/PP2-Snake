@@ -6,6 +6,8 @@
 #include <stdbool.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
 
 COORD 
 // ahsjgdfha
@@ -14,8 +16,8 @@ COORD
 	//coordenadas utilizadas para desenhar os elementos
 	coordJanela;
 
-#define linhas 20
-#define colunas 50
+#define linhas 40
+#define colunas 40
 
 typedef struct registo{
 	int linha;
@@ -32,6 +34,8 @@ int pontos = 0;
 int aComer = 0;
 bool endgame = false;
 bool sairJogo = false;
+ALLEGRO_FONT *font;
+ALLEGRO_KEYBOARD_STATE state;
 
 //Criar um display para o Allegro
 ALLEGRO_DISPLAY *display = NULL;
@@ -44,10 +48,10 @@ void desenharLimites(){
 	for (int i = 0; i <= linhas; i++){
 		for (int j = 0; j <= colunas; j++){
 			if (i == 0 || i == linhas || j == 0 || j == colunas){
-				coordJanela.X = j;
+				/*coordJanela.X = j;
 				coordJanela.Y = i;
 				SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-				printf("+");
+				printf("+");*/
 				al_draw_rectangle(j * 10, i * 10, j * 10 + 10, i * 10 + 10, BLACK, 2);
 			}
 		}
@@ -149,19 +153,19 @@ void desenharElementos(elemento elemento, int tipo){
 		return 0;
 	}
 	else{
-		coordJanela.X = elemento->coluna+1;
+		/*coordJanela.X = elemento->coluna+1;
 		coordJanela.Y = elemento->linha+1;
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
+		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);*/
 
 		if (tipo == 0){
-			printf("+");
+			/*printf("+");*/
 			//Cor sólida
 			al_draw_filled_rectangle(elemento->coluna * 10, elemento->linha * 10, elemento->coluna * 10 + 10, elemento->linha * 10 + 10, RED);
 			//Borda
 			al_draw_rectangle(elemento->coluna * 10 + 2, elemento->linha * 10 + 2, elemento->coluna * 10 + 8, elemento->linha * 10 + 8, BLACK, 2);
 		}
 		else{
-			printf("O");
+			/*printf("O");*/
 			al_draw_filled_circle(elemento->coluna * 10 + 5, elemento->linha * 10 + 5, 6, ORANGE);
 		}
 		desenharElementos(elemento->seguinte, tipo);
@@ -173,10 +177,11 @@ void desenharBocaCobra(elemento elemento){
 		return 0;
 	}
 	else{
-		coordJanela.X = elemento->coluna + 1;
+		/*coordJanela.X = elemento->coluna + 1;
 		coordJanela.Y = elemento->linha + 1;
 		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-		printf("*");
+		printf("*");*/
+		al_draw_filled_rectangle(elemento->coluna * 10, elemento->linha * 10, elemento->coluna * 10 + 10, elemento->linha * 10 + 10, BLACK);
 	}
 }
 
@@ -259,7 +264,7 @@ bool verificarColisao()
 	else 
 	{
 		// verifica se a cabeça da cobra encontrasse no limite do tabuleiro
-		if (snake->linha == -1 || snake->linha == linhas - 1 || snake->coluna == -1 || snake->coluna == colunas - 1)
+		if (snake->linha == 0 || snake->linha == linhas || snake->coluna == 0 || snake->coluna == colunas )
 		{
 			return true;
 		}
@@ -269,28 +274,36 @@ bool verificarColisao()
 
 //Desenha o numero de pontos que o jogador tem
 void desenharPontuacao(){
-	coordJanela.X = colunas + 12;
+	/*coordJanela.X = colunas + 12;
 	coordJanela.Y = 0;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 	printf("PONTOS");
 	coordJanela.X += 2;
 	coordJanela.Y = 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-	printf("%d", pontos);
+	printf("%d", pontos);*/
+
+	char cated_string[128];
+	sprintf(cated_string, "%s%d", "Score: ", pontos);
+
+	al_draw_text(font, al_map_rgb(255, 255, 255), 525, 10, ALLEGRO_ALIGN_CENTRE, cated_string);
 }
 
 //desenhar fim do jogo
 //mensegem de fim do joo
 //pontuacao maxima
 void desenharFimDoJogo(){
-	coordJanela.X = colunas -25;
+	/*coordJanela.X = colunas -25;
 	coordJanela.Y = 10;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
 	printf("GAME OVER!");
 	coordJanela.X;;
 	coordJanela.Y += 1;
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coordJanela);
-	printf("Pontuacao Maxima : %d\n", pontos);
+	printf("Pontuacao Maxima : %d\n", pontos);*/
+
+	//TODO:
+	//ALLEGRO game over e esperar por teclado antes de passar engame para true
 	endgame = true;
 	
 }
@@ -314,47 +327,38 @@ void loadComida(){
 
 //Lida com input do teclado
 void atualizarInput(){
-	if (_kbhit())
-	{
-		int key = _getch();
 
-		switch (key)
+	al_get_keyboard_state(&state);
+
+	if (al_key_down(&state, ALLEGRO_KEY_DOWN)){
+		// Andar para baixo
+		if (direccaoMovimentoAnterior != 8)
 		{
-		case 's':
-			// bloqueia o movimento contrario à ordem dada!
-			if (direccaoMovimentoAnterior != 8)
-			{
-				direccaoMovimento = 2;
-			}
-			break;
+			direccaoMovimento = 2;
+		}
+	}
 
-		case 'd':
-			// bloqueia o movimento contrario à ordem dada!
-			if (direccaoMovimentoAnterior != 4)
-			{
-				direccaoMovimento = 6;
-			}
-			break;
+	if (al_key_down(&state, ALLEGRO_KEY_RIGHT)){
+		// Andar para a direita
+		if (direccaoMovimentoAnterior != 4)
+		{
+			direccaoMovimento = 6;
+		}
+	}
 
-		case 'w':
-			// bloqueia o movimento contrario à ordem dada!
+	if (al_key_down(&state, ALLEGRO_KEY_UP)){
+		// Andar para cima
+		if (direccaoMovimentoAnterior != 2)
+		{
+			direccaoMovimento = 8;
+		}
+	}
 
-			if (direccaoMovimentoAnterior != 2)
-			{
-				direccaoMovimento = 8;
-			}
-			break;
-
-		case 'a':
-			// bloqueia o movimento contrario à ordem dada!
-			if (direccaoMovimentoAnterior != 6)
-			{
-				direccaoMovimento = 4;
-			}
-			break;
-
-		default:
-			break;
+	if (al_key_down(&state, ALLEGRO_KEY_LEFT)){
+		// Andar para a esquerda
+		if (direccaoMovimentoAnterior != 6)
+		{
+			direccaoMovimento = 4;
 		}
 	}
 }
@@ -372,7 +376,7 @@ void moverCobra(int velocidade){
 
 void Update(){
 	//mover cobra
-	moverCobra(5);
+	moverCobra(50);
 	//Atualizar input do teclado
 	atualizarInput();
 	//Verificar se está a comer
@@ -386,8 +390,7 @@ void Restart()
 
 	snake = NULL;
 	comida = NULL;
-
-
+	pontos = 0;
 	snake = loadCobra();
 	loadComida();
 	endgame = false;
@@ -397,35 +400,27 @@ void Restart()
 // metodo para reiniciar o jogo
 void newGame()
 {
-		printf("Play again?\n");
-		printf("Y for yes or N for not \n");
-		if (_kbhit())
-		{
-			int key = _getch();
-			switch (key)
-			{
-			case 'y':
-			{
-				Restart();
-				break;
-			}
-				
-			case 'n':
-			{
-				sairJogo = true;
-				Restart();
-				break;
-			}
-				
-			default:
-				break;
-			}
-		}
-		system("cls");
+
+	al_clear_to_color(al_map_rgb(63, 20, 42));
+
+	al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Play Again?");
+	al_draw_text(font, al_map_rgb(255, 255, 255), 0, 32, ALLEGRO_ALIGN_LEFT, "Y for yes or N for no.");
+
+	al_flip_display();
+
+	al_get_keyboard_state(&state);
+
+	if (al_key_down(&state, ALLEGRO_KEY_Y)){
+		Restart();
+	}
+	if (al_key_down(&state, ALLEGRO_KEY_N)){
+		sairJogo = true;
+		Restart();
+	}
 }
 void Draw(){
 	//limpar o ecrã
-	system("cls");
+	//system("cls");
 	//Limpar o backbuffer para a cor de fundo
 	al_clear_to_color(al_map_rgb(63, 20, 42));
 
@@ -472,6 +467,20 @@ int main(int argc, char **argv){
 	//Inicializar o addon de primitivas
 	if (!al_init_primitives_addon()) {
 		fprintf(stderr, "failed to initialize primitives addon!\n");
+		return -1;
+	}
+	//Titulo da janela
+	al_set_window_title(display, "Ultimate Snake");
+	//Inicializar o keyboard
+	al_install_keyboard();
+	//initialize the font addon
+	al_init_font_addon(); 
+	//initialize the ttf (True Type Font) addon
+	al_init_ttf_addon();
+	//Inicializar uma fonte
+	font = al_load_ttf_font("pirulen.ttf", 28, 0);
+	if (!font){
+		fprintf(stderr, "Could not load 'pirulen.ttf'.\n");
 		return -1;
 	}
 
