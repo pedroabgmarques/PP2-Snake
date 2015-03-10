@@ -1,2 +1,2 @@
 # PP2-Snake
-Snake em C, consola
+Snake em C + Allegro
